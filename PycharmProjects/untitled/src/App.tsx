@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 const skills = [
@@ -13,6 +13,50 @@ const projects = [
 ]
 
 const Arrow = () => <span aria-hidden="true">↗</span>
+function VideoPlayer() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const playerRef = useRef<HTMLDivElement>(null)
+  const [playing, setPlaying] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const [volume, setVolume] = useState(1)
+  const [speed, setSpeed] = useState(1)
+  const [quality, setQuality] = useState('1080p')
+  const togglePlay = () => {
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) void video.play()
+    else video.pause()
+  }
+  const seek = (value: number) => {
+    if (videoRef.current) videoRef.current.currentTime = value
+    setProgress(value)
+  }
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) void playerRef.current?.requestFullscreen()
+    else void document.exitFullscreen()
+  }
+  const changeSpeed = (value: string) => {
+    const next = Number(value)
+    setSpeed(next)
+    if (videoRef.current) videoRef.current.playbackRate = next
+  }
+  const changeVolume = (value: string) => {
+    const next = Number(value)
+    setVolume(next)
+    if (videoRef.current) videoRef.current.volume = next
+  }
+  return <div className="video-player glass" ref={playerRef}>
+    <video ref={videoRef} preload="metadata" playsInline onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)} onTimeUpdate={(event) => setProgress(event.currentTarget.currentTime)} onEnded={() => setPlaying(false)}>
+      <source src="/Presenter_explaining_creative_portfolio_1080p.mp4" type="video/mp4" />
+    </video>
+    <div className="video-overlay"><span className="video-kicker">A glimpse into the process</span><button className="video-big-play" onClick={togglePlay} aria-label={playing ? 'Pause video' : 'Play video'}>{playing ? 'Ⅱ' : '▶'}</button></div>
+    <div className="video-controls">
+      <input className="video-progress" type="range" min="0" max={duration || 0} step="0.1" value={progress} onChange={(event) => seek(Number(event.target.value))} aria-label="Video progress" />
+      <div className="video-control-row"><button onClick={togglePlay} aria-label={playing ? 'Pause video' : 'Play video'}>{playing ? 'Ⅱ' : '▶'}</button><span className="video-time">{Math.floor(progress / 60)}:{String(Math.floor(progress % 60)).padStart(2, '0')} / {Math.floor(duration / 60)}:{String(Math.floor(duration % 60)).padStart(2, '0')}</span><span className="video-spacer" /><label className="video-select">Quality<select value={quality} onChange={(event) => setQuality(event.target.value)}><option value="1080p">1080p · original</option></select></label><label className="video-select">Speed<select value={speed} onChange={(event) => changeSpeed(event.target.value)}><option value="0.75">0.75×</option><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><input className="volume" type="range" min="0" max="1" step="0.05" value={volume} onChange={(event) => changeVolume(event.target.value)} aria-label="Volume" /><button onClick={toggleFullscreen} aria-label="Toggle fullscreen">⛶</button></div>
+    </div>
+  </div>
+}
 const goTo = (event: React.MouseEvent<HTMLAnchorElement>, path: string, close?: () => void) => {
   if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
   event.preventDefault()
@@ -39,7 +83,7 @@ const Header = () => {
 const Page = ({ children }: { children: React.ReactNode }) => <><Header /><main className="page-wrap">{children}</main></>
 
 function Home() {
-  return <Page><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="status-dot" /> Available for opportunities</p><h1>Researching<br /><em>what's next.</em></h1><p className="hero-intro">I'm Himel, a market research analyst and engineering graduate who turns complex industries into clear, actionable insights.</p><div className="hero-actions"><a className="button button-primary" href="/contact" onClick={(event) => goTo(event, '/contact')}>Let's talk <Arrow /></a><a className="button button-quiet" href="/Himel_Choudhury_Updated.pdf" download>Download CV <span>↓</span></a></div></div><div className="hero-orbit glass"><div className="orbit-ring ring-one" /><div className="orbit-ring ring-two" /><div className="orbit-core"><span>HC</span><small>BUILD<br />WITH<br />CLARITY</small></div><div className="orbit-label label-top">ANALYSIS</div><div className="orbit-label label-right">STRATEGY</div><div className="orbit-label label-bottom">ENGINEERING</div></div></section><div className="home-links"><a href="/about" onClick={(event) => goTo(event, '/about')}>Explore the portfolio <Arrow /></a><span>Agartala · India</span></div></Page>
+  return <Page><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="status-dot" /> Available for opportunities</p><h1>Researching<br /><em>what's next.</em></h1><p className="hero-intro">I'm Himel, a market research analyst and engineering graduate who turns complex industries into clear, actionable insights.</p><div className="hero-actions"><a className="button button-primary" href="/contact" onClick={(event) => goTo(event, '/contact')}>Let's talk <Arrow /></a><a className="button button-quiet" href="/Himel_Choudhury_Updated.pdf" download>Download CV <span>↓</span></a></div></div><div className="hero-orbit glass"><div className="orbit-ring ring-one" /><div className="orbit-ring ring-two" /><div className="orbit-core"><span>HC</span><small>BUILD<br />WITH<br />CLARITY</small></div><div className="orbit-label label-top">ANALYSIS</div><div className="orbit-label label-right">STRATEGY</div><div className="orbit-label label-bottom">ENGINEERING</div></div></section><section className="home-video"><div><p className="eyebrow">01 / In motion</p><h2>Ideas are<br /><em>better seen.</em></h2></div><VideoPlayer /></section><div className="home-links"><a href="/about" onClick={(event) => goTo(event, '/about')}>Explore the portfolio <Arrow /></a><span>Agartala · India</span></div></Page>
 }
 
 function About() {
