@@ -13,15 +13,20 @@ const projects = [
 ]
 
 const Arrow = () => <span aria-hidden="true">↗</span>
-const Header = () => (
-  <header className="nav glass">
-    <a className="brand" href="/">H<span>.</span></a>
-    <nav className="nav-links">
-      <a href="/about">About</a><a href="/experience">Experience</a><a href="/toolkit">Toolkit</a><a href="/work">Work</a><a href="/education">Education</a>
-      <a className="nav-contact" href="/contact">Let's connect <Arrow /></a>
+const Header = () => {
+  const [open, setOpen] = useState(false)
+  const close = () => setOpen(false)
+  return <header className="nav glass">
+    <a className="brand" href="/" onClick={close}>H<span>.</span></a>
+    <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Toggle navigation" aria-expanded={open}>
+      <span /><span /><span />
+    </button>
+    <nav className={open ? 'nav-links is-open' : 'nav-links'}>
+      <a href="/about" onClick={close}>About</a><a href="/experience" onClick={close}>Experience</a><a href="/toolkit" onClick={close}>Toolkit</a><a href="/work" onClick={close}>Work</a><a href="/education" onClick={close}>Education</a>
+      <a className="nav-contact" href="/contact" onClick={close}>Let's connect <Arrow /></a>
     </nav>
   </header>
-)
+}
 const Page = ({ children }: { children: React.ReactNode }) => <><Header /><main className="page-wrap">{children}</main></>
 
 function Home() {
