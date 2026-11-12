@@ -21,7 +21,6 @@ function VideoPlayer() {
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(1)
   const [speed, setSpeed] = useState(1)
-  const [quality, setQuality] = useState('1080p')
   const togglePlay = () => {
     const video = videoRef.current
     if (!video) return
@@ -53,7 +52,7 @@ function VideoPlayer() {
     <div className="video-overlay"><span className="video-kicker">A glimpse into the process</span><button className="video-big-play" onClick={togglePlay} aria-label={playing ? 'Pause video' : 'Play video'}>{playing ? 'Ⅱ' : '▶'}</button></div>
     <div className="video-controls">
       <input className="video-progress" type="range" min="0" max={duration || 0} step="0.1" value={progress} onChange={(event) => seek(Number(event.target.value))} aria-label="Video progress" />
-      <div className="video-control-row"><button onClick={togglePlay} aria-label={playing ? 'Pause video' : 'Play video'}>{playing ? 'Ⅱ' : '▶'}</button><span className="video-time">{Math.floor(progress / 60)}:{String(Math.floor(progress % 60)).padStart(2, '0')} / {Math.floor(duration / 60)}:{String(Math.floor(duration % 60)).padStart(2, '0')}</span><span className="video-spacer" /><label className="video-select">Quality<select value={quality} onChange={(event) => setQuality(event.target.value)}><option value="1080p">1080p · original</option></select></label><label className="video-select">Speed<select value={speed} onChange={(event) => changeSpeed(event.target.value)}><option value="0.75">0.75×</option><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><input className="volume" type="range" min="0" max="1" step="0.05" value={volume} onChange={(event) => changeVolume(event.target.value)} aria-label="Volume" /><button onClick={toggleFullscreen} aria-label="Toggle fullscreen">⛶</button></div>
+      <div className="video-control-row"><button className="control-button" onClick={togglePlay} aria-label={playing ? 'Pause video' : 'Play video'}>{playing ? 'Ⅱ' : '▶'}</button><span className="video-time">{Math.floor(progress / 60)}:{String(Math.floor(progress % 60)).padStart(2, '0')} / {Math.floor(duration / 60)}:{String(Math.floor(duration % 60)).padStart(2, '0')}</span><span className="video-spacer" /><label className="video-select">Speed<select value={speed} onChange={(event) => changeSpeed(event.target.value)}><option value="0.75">0.75×</option><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><input className="volume" type="range" min="0" max="1" step="0.05" value={volume} onChange={(event) => changeVolume(event.target.value)} aria-label="Volume" /><button className="control-button" onClick={toggleFullscreen} aria-label="Toggle fullscreen">⛶</button></div>
     </div>
   </div>
 }
