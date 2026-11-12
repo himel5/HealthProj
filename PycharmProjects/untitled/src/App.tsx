@@ -1,0 +1,63 @@
+import { useEffect, useState } from 'react'
+import './App.css'
+
+const skills = [
+  ['Market intelligence', 'Global market mapping, competitor profiling, MECE segmentation, value-chain and pricing analysis'],
+  ['CRM & QA', 'Salesforce fundamentals, functional and regression testing, test-case design, JIRA, TestRail and Zephyr'],
+  ['Technology', 'Python, C++, JavaScript, HTML, CSS, MATLAB, AWS, Git, GitHub and Simulink'],
+]
+
+const projects = [
+  ['01', 'Digital Stethoscope using Op-Amp', 'Electronics · Signal processing', 'Designed a digital stethoscope circuit using an operational amplifier, applying signal-processing techniques to improve sound amplification and diagnostic audio capture.'],
+  ['02', 'Drone Communication Enhancement', 'Wireless systems · Ongoing', 'Explored approaches to improve communication reliability, reduce latency and support real-time data transmission for drone systems.'],
+]
+
+const Arrow = () => <span aria-hidden="true">↗</span>
+const Header = () => (
+  <header className="nav glass">
+    <a className="brand" href="/">H<span>.</span></a>
+    <nav className="nav-links">
+      <a href="/about">About</a><a href="/experience">Experience</a><a href="/toolkit">Toolkit</a><a href="/work">Work</a><a href="/education">Education</a>
+      <a className="nav-contact" href="/contact">Let's connect <Arrow /></a>
+    </nav>
+  </header>
+)
+const Page = ({ children }: { children: React.ReactNode }) => <><Header /><main className="page-wrap">{children}</main></>
+
+function Home() {
+  return <Page><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="status-dot" /> Available for opportunities</p><h1>Researching<br /><em>what's next.</em></h1><p className="hero-intro">I'm Himel, a market research analyst and engineering graduate who turns complex industries into clear, actionable insights.</p><div className="hero-actions"><a className="button button-primary" href="/contact">Let's talk <Arrow /></a><a className="button button-quiet" href="/Himel_Choudhury_Updated.pdf" download>Download CV <span>↓</span></a></div></div><div className="hero-orbit glass"><div className="orbit-ring ring-one" /><div className="orbit-ring ring-two" /><div className="orbit-core"><span>HC</span><small>BUILD<br />WITH<br />CLARITY</small></div><div className="orbit-label label-top">ANALYSIS</div><div className="orbit-label label-right">STRATEGY</div><div className="orbit-label label-bottom">ENGINEERING</div></div></section><div className="home-links"><a href="/about">Explore the portfolio <Arrow /></a><span>Agartala · India</span></div></Page>
+}
+
+function About() {
+  return <Page><section className="inner-page"><p className="eyebrow">01 / Perspective</p><h1>Curiosity is<br /><em>a competitive edge.</em></h1><div className="inner-copy"><p className="lead">I bring an engineer's instinct for systems and an analyst's eye for the signal in the noise.</p><p>My work spans global B2B market research, competitive intelligence and technical analysis. I build structured market landscapes, map ecosystems and translate primary-source research into decisions people can act on.</p><div className="stat-row"><div><strong>01</strong><span>Engineering<br />foundation</span></div><div><strong>03</strong><span>Core domains<br />of expertise</span></div><div><strong>∞</strong><span>Questions<br />worth asking</span></div></div></div></section></Page>
+}
+
+function Experience() {
+  return <Page><section className="inner-page"><p className="eyebrow">02 / Experience</p><h1>From research<br /><em>to relevance.</em></h1><article className="experience-card glass"><div className="experience-meta"><span>May — Oct 2026</span><span>01</span></div><div className="experience-main"><p className="company">Future Market Insights</p><h3>Market Research Analyst</h3><p className="experience-summary">Conducted global B2B market research across industrial, technology, materials, energy and logistics sectors.</p><ul><li>Mapped manufacturers, suppliers and solution providers across geographies.</li><li>Developed MECE market segmentations covering trends, pricing, value chains and competition.</li><li>Synthesized official websites, annual reports, investor relations materials and regulatory sources.</li><li>Assessed competitor positioning and identified potential white-space opportunities.</li></ul></div></article></section></Page>
+}
+
+function Toolkit() {
+  return <Page><section className="inner-page"><p className="eyebrow">03 / Toolkit</p><h1>Built to<br /><em>connect dots.</em></h1><div className="skill-grid">{skills.map(([title, text], i) => <article className="skill-card" key={title}><span className="skill-index">0{i + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section></Page>
+}
+
+function Work() {
+  return <Page><section className="inner-page"><p className="eyebrow">04 / Selected work</p><h1>Ideas in<br /><em>motion.</em></h1><div className="project-list">{projects.map(([number, title, tag, text]) => <article className="project-row" key={number}><span className="project-number">{number}</span><div><p className="project-tag">{tag}</p><h3>{title}</h3><p className="project-text">{text}</p></div><span className="project-arrow"><Arrow /></span></article>)}</div></section></Page>
+}
+
+function Education() {
+  return <Page><section className="inner-page"><p className="eyebrow">05 / Foundation</p><h1>Always<br /><em>learning.</em></h1><div className="education-card glass"><p className="project-tag">2022 — 2026</p><h3>B.Tech, Electronics & Telecommunications Engineering</h3><p>Kalinga Institute of Industrial Technology<br />Bhubaneswar, Odisha</p><hr /><p className="project-tag">Academic projects</p><p>Digital Stethoscope using Op-Amp<br />Drone Communication Enhancement</p></div></section></Page>
+}
+
+function Contact() {
+  return <Page><section className="contact-section"><p className="eyebrow">06 / Contact</p><h1>Have a question<br /><em>worth exploring?</em></h1><a className="email-link" href="mailto:choudhuryhimel03@gmail.com">choudhuryhimel03@gmail.com <Arrow /></a><div className="contact-footer"><span>Agartala, Tripura · India</span><a href="tel:+919366664729">+91 93666 64729</a><span>© 2026 Himel Choudhury</span></div></section></Page>
+}
+
+function App() {
+  const [path, setPath] = useState(window.location.pathname)
+  useEffect(() => { const onPop = () => setPath(window.location.pathname); window.addEventListener('popstate', onPop); return () => window.removeEventListener('popstate', onPop) }, [])
+  useEffect(() => { document.title = path === '/' ? "Himel's Portfolio" : `${path.slice(1).replace(/^\w/, (c) => c.toUpperCase())} — Himel's Portfolio` }, [path])
+  const pages: Record<string, React.ReactNode> = { '/': <Home />, '/about': <About />, '/experience': <Experience />, '/toolkit': <Toolkit />, '/work': <Work />, '/education': <Education />, '/contact': <Contact /> }
+  return pages[path] || <Home />
+}
+
+export default App
