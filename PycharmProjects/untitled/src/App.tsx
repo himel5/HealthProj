@@ -106,7 +106,18 @@ const Header = () => {
     </nav>
   </header>
 }
-const Page = ({ children }: { children: React.ReactNode }) => <><Header /><main className="page-wrap">{children}</main><PortfolioChat /></>
+const Page = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    const move = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return
+      document.documentElement.style.setProperty('--pointer-x', `${event.clientX}px`)
+      document.documentElement.style.setProperty('--pointer-y', `${event.clientY}px`)
+    }
+    window.addEventListener('pointermove', move, { passive: true })
+    return () => window.removeEventListener('pointermove', move)
+  }, [])
+  return <div className="site-shell"><div className="pointer-glow" /><Header /><main className="page-wrap">{children}</main><PortfolioChat /></div>
+}
 
 function Home() {
   return <Page><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="status-dot" /> Available for opportunities</p><h1>Researching<br /><em>what's next.</em></h1><p className="hero-intro">I'm Himel, a market research analyst and engineering graduate who turns complex industries into clear, actionable insights.</p><div className="hero-actions"><a className="button button-primary" href="/contact" onClick={(event) => goTo(event, '/contact')}>Let's talk <Arrow /></a><a className="button button-quiet" href="/Himel_Choudhury_Updated.pdf" download>Download CV <span>↓</span></a></div></div><div className="hero-orbit glass"><div className="orbit-ring ring-one" /><div className="orbit-ring ring-two" /><div className="orbit-core"><span>HC</span><small>BUILD<br />WITH<br />CLARITY</small></div><div className="orbit-label label-top">ANALYSIS</div><div className="orbit-label label-right">STRATEGY</div><div className="orbit-label label-bottom">ENGINEERING</div></div></section><section className="home-video"><div><p className="eyebrow">01 / In motion</p><h2>Ideas are<br /><em>better seen.</em></h2></div><VideoPlayer /></section><div className="home-links"><a href="/about" onClick={(event) => goTo(event, '/about')}>Explore the portfolio <Arrow /></a><span>Agartala · India</span></div></Page>

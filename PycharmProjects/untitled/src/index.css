@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
   color: #eeeef2;
   background: #08090d;
   font-synthesis: none;
@@ -11,6 +11,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; }
+body { margin: 0; min-width: 320px; background: #08090d; }
 a { color: inherit; }
 button { font: inherit; }
+::selection { color: #10111b; background: #cdd1ff; }
