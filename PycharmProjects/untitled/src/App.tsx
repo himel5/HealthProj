@@ -13,6 +13,33 @@ const projects = [
 ]
 
 const Arrow = () => <span aria-hidden="true">↗</span>
+const chatAnswers = [
+  { keys: ['who', 'himel', 'about'], answer: "I'm Himel Choudhury, a Market Research Analyst and Electronics & Telecommunications Engineering graduate based in Agartala, India." },
+  { keys: ['experience', 'work', 'job', 'future market'], answer: "I worked as a Market Research Analyst at Future Market Insights from May to October 2026, covering global B2B markets, competitive landscapes, segmentation, pricing, and value-chain research." },
+  { keys: ['skill', 'technology', 'tech', 'tool'], answer: "My toolkit includes Python, C++, JavaScript, HTML, CSS, MATLAB, AWS, Git, GitHub, Salesforce fundamentals, JIRA, TestRail, and Zephyr." },
+  { keys: ['project', 'stethoscope', 'drone'], answer: "My featured projects are a digital stethoscope using an op-amp and an ongoing project exploring more reliable, lower-latency drone communication." },
+  { keys: ['education', 'degree', 'study', 'college'], answer: "I completed a B.Tech in Electronics and Telecommunications Engineering at Kalinga Institute of Industrial Technology in Bhubaneswar from 2022 to 2026." },
+  { keys: ['contact', 'email', 'hire', 'connect'], answer: "You can reach me at choudhuryhimel03@gmail.com or +91 93666 64729. I'm open to relevant opportunities and conversations." },
+  { keys: ['cv', 'resume'], answer: "You can download my CV from the Download CV button on the home page." },
+]
+function PortfolioChat() {
+  const [open, setOpen] = useState(false)
+  const [input, setInput] = useState('')
+  const [messages, setMessages] = useState([{ from: 'bot', text: "Hi, I'm Himel's portfolio assistant. Ask me about my experience, skills, projects, or education." }])
+  const answer = (event: React.FormEvent) => {
+    event.preventDefault()
+    const question = input.trim()
+    if (!question) return
+    const normalized = question.toLowerCase()
+    const found = chatAnswers.find(({ keys }) => keys.some((key) => normalized.includes(key)))
+    setMessages((current) => [...current, { from: 'user', text: question }, { from: 'bot', text: found?.answer ?? "I can answer questions about Himel's experience, skills, projects, education, CV, and contact details." }])
+    setInput('')
+  }
+  return <div className={open ? 'chat-widget is-open' : 'chat-widget'}>
+    {open && <div className="chat-panel glass" role="dialog" aria-label="Portfolio assistant"><div className="chat-header"><div><span className="chat-status" /> Portfolio assistant</div><button onClick={() => setOpen(false)} aria-label="Close chat">×</button></div><div className="chat-messages">{messages.map((message, index) => <p className={`chat-message ${message.from}`} key={`${message.from}-${index}`}>{message.text}</p>)}</div><form className="chat-form" onSubmit={answer}><input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask about Himel..." aria-label="Ask the portfolio assistant" /><button type="submit" aria-label="Send message">↗</button></form></div>}
+    <button className="chat-launcher glass" onClick={() => setOpen(!open)} aria-label={open ? 'Close portfolio assistant' : 'Open portfolio assistant'}><span className="chat-spark">✦</span><span>{open ? 'Close' : 'Ask me'}</span></button>
+  </div>
+}
 function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const playerRef = useRef<HTMLDivElement>(null)
@@ -79,7 +106,7 @@ const Header = () => {
     </nav>
   </header>
 }
-const Page = ({ children }: { children: React.ReactNode }) => <><Header /><main className="page-wrap">{children}</main></>
+const Page = ({ children }: { children: React.ReactNode }) => <><Header /><main className="page-wrap">{children}</main><PortfolioChat /></>
 
 function Home() {
   return <Page><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="status-dot" /> Available for opportunities</p><h1>Researching<br /><em>what's next.</em></h1><p className="hero-intro">I'm Himel, a market research analyst and engineering graduate who turns complex industries into clear, actionable insights.</p><div className="hero-actions"><a className="button button-primary" href="/contact" onClick={(event) => goTo(event, '/contact')}>Let's talk <Arrow /></a><a className="button button-quiet" href="/Himel_Choudhury_Updated.pdf" download>Download CV <span>↓</span></a></div></div><div className="hero-orbit glass"><div className="orbit-ring ring-one" /><div className="orbit-ring ring-two" /><div className="orbit-core"><span>HC</span><small>BUILD<br />WITH<br />CLARITY</small></div><div className="orbit-label label-top">ANALYSIS</div><div className="orbit-label label-right">STRATEGY</div><div className="orbit-label label-bottom">ENGINEERING</div></div></section><section className="home-video"><div><p className="eyebrow">01 / In motion</p><h2>Ideas are<br /><em>better seen.</em></h2></div><VideoPlayer /></section><div className="home-links"><a href="/about" onClick={(event) => goTo(event, '/about')}>Explore the portfolio <Arrow /></a><span>Agartala · India</span></div></Page>
