@@ -13,24 +13,33 @@ const projects = [
 ]
 
 const Arrow = () => <span aria-hidden="true">↗</span>
+const goTo = (event: React.MouseEvent<HTMLAnchorElement>, path: string, close?: () => void) => {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+  event.preventDefault()
+  close?.()
+  if (window.location.pathname !== path) {
+    window.history.pushState({}, '', path)
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  }
+}
 const Header = () => {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
   return <header className="nav glass">
-    <a className="brand" href="/" onClick={close}>H<span>.</span></a>
+    <a className="brand" href="/" onClick={(event) => goTo(event, '/', close)}>H<span>.</span></a>
     <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Toggle navigation" aria-expanded={open}>
       <span /><span /><span />
     </button>
     <nav className={open ? 'nav-links is-open' : 'nav-links'}>
-      <a href="/about" onClick={close}>About</a><a href="/experience" onClick={close}>Experience</a><a href="/toolkit" onClick={close}>Toolkit</a><a href="/work" onClick={close}>Work</a><a href="/education" onClick={close}>Education</a>
-      <a className="nav-contact" href="/contact" onClick={close}>Let's connect <Arrow /></a>
+      <a href="/about" onClick={(event) => goTo(event, '/about', close)}>About</a><a href="/experience" onClick={(event) => goTo(event, '/experience', close)}>Experience</a><a href="/toolkit" onClick={(event) => goTo(event, '/toolkit', close)}>Toolkit</a><a href="/work" onClick={(event) => goTo(event, '/work', close)}>Work</a><a href="/education" onClick={(event) => goTo(event, '/education', close)}>Education</a>
+      <a className="nav-contact" href="/contact" onClick={(event) => goTo(event, '/contact', close)}>Let's connect <Arrow /></a>
     </nav>
   </header>
 }
 const Page = ({ children }: { children: React.ReactNode }) => <><Header /><main className="page-wrap">{children}</main></>
 
 function Home() {
-  return <Page><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="status-dot" /> Available for opportunities</p><h1>Researching<br /><em>what's next.</em></h1><p className="hero-intro">I'm Himel, a market research analyst and engineering graduate who turns complex industries into clear, actionable insights.</p><div className="hero-actions"><a className="button button-primary" href="/contact">Let's talk <Arrow /></a><a className="button button-quiet" href="/Himel_Choudhury_Updated.pdf" download>Download CV <span>↓</span></a></div></div><div className="hero-orbit glass"><div className="orbit-ring ring-one" /><div className="orbit-ring ring-two" /><div className="orbit-core"><span>HC</span><small>BUILD<br />WITH<br />CLARITY</small></div><div className="orbit-label label-top">ANALYSIS</div><div className="orbit-label label-right">STRATEGY</div><div className="orbit-label label-bottom">ENGINEERING</div></div></section><div className="home-links"><a href="/about">Explore the portfolio <Arrow /></a><span>Agartala · India</span></div></Page>
+  return <Page><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="status-dot" /> Available for opportunities</p><h1>Researching<br /><em>what's next.</em></h1><p className="hero-intro">I'm Himel, a market research analyst and engineering graduate who turns complex industries into clear, actionable insights.</p><div className="hero-actions"><a className="button button-primary" href="/contact" onClick={(event) => goTo(event, '/contact')}>Let's talk <Arrow /></a><a className="button button-quiet" href="/Himel_Choudhury_Updated.pdf" download>Download CV <span>↓</span></a></div></div><div className="hero-orbit glass"><div className="orbit-ring ring-one" /><div className="orbit-ring ring-two" /><div className="orbit-core"><span>HC</span><small>BUILD<br />WITH<br />CLARITY</small></div><div className="orbit-label label-top">ANALYSIS</div><div className="orbit-label label-right">STRATEGY</div><div className="orbit-label label-bottom">ENGINEERING</div></div></section><div className="home-links"><a href="/about" onClick={(event) => goTo(event, '/about')}>Explore the portfolio <Arrow /></a><span>Agartala · India</span></div></Page>
 }
 
 function About() {
@@ -62,7 +71,7 @@ function App() {
   useEffect(() => { const onPop = () => setPath(window.location.pathname); window.addEventListener('popstate', onPop); return () => window.removeEventListener('popstate', onPop) }, [])
   useEffect(() => { document.title = path === '/' ? "Himel's Portfolio" : `${path.slice(1).replace(/^\w/, (c) => c.toUpperCase())} — Himel's Portfolio` }, [path])
   const pages: Record<string, React.ReactNode> = { '/': <Home />, '/about': <About />, '/experience': <Experience />, '/toolkit': <Toolkit />, '/work': <Work />, '/education': <Education />, '/contact': <Contact /> }
-  return pages[path] || <Home />
+  return <div key={path} className="route-view">{pages[path] || <Home />}</div>
 }
 
 export default App
